@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Pass } from './passes.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import {BarcodeType, Pass} from './passes.entity';
+import {InsertResult, Repository, UpdateResult} from 'typeorm';
+import {CreatePassDto} from "./dto/create-pass.dto";
+import {UpdatePassDto} from "./dto/update-pass.dto";
 
 @Injectable()
 export class PassesService {
@@ -22,7 +24,23 @@ export class PassesService {
     await this.passRepository.delete(uuid);
   }
 
-  async update(uuid: string, data: Pass): Promise<UpdateResult> {
-    return await this.passRepository.update(uuid, data);
+  async update(uuid: string, pass: UpdatePassDto): Promise<Pass> {
+    const passToUpdate = await this.find(uuid);
+    passToUpdate.code = pass.code;
+    passToUpdate.name = pass.name;
+    passToUpdate.type = BarcodeType[pass.type];
+
+    const ret = await this.passRepository.update(uuid, passToUpdate);
+    return passToUpdate;
+  }
+
+  async insert(pass: CreatePassDto): Promise<string> {
+    const passCreated = new Pass();
+    passCreated.code = pass.code;
+    passCreated.name = pass.name;
+    passCreated.type = BarcodeType[pass.type];
+
+    const ret = await this.passRepository.insert(passCreated);
+    return ret.identifiers[0].id;
   }
 }
