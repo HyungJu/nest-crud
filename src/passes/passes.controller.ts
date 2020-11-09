@@ -1,9 +1,16 @@
-import { Controller, Get, Param, Post, Body, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { PassesService } from './passes.service';
 import { Pass } from './passes.entity';
 import { CreatePassDto } from './dto/create-pass.dto';
-import {UpdatePassDto} from "./dto/update-pass.dto";
-import {UpdateResult} from "typeorm";
+import { UpdatePassDto } from './dto/update-pass.dto';
 
 @Controller('passes')
 export class PassesController {
@@ -15,7 +22,7 @@ export class PassesController {
   }
 
   @Get(':id')
-  getOne(@Param() params): Promise<Pass> {
+  async getOne(@Param() params): Promise<Pass> {
     return this.passesService.find(params.id);
   }
 
@@ -25,7 +32,16 @@ export class PassesController {
   }
 
   @Put(':id')
-  async update(@Param() params, @Body() updatePassDto: UpdatePassDto): Promise<Pass> {
+  async update(
+    @Param() params,
+    @Body() updatePassDto: UpdatePassDto,
+  ): Promise<Pass> {
     return this.passesService.update(params.id, updatePassDto);
+  }
+
+  @Delete(':id')
+  async delete(@Param() params): Promise<any> {
+    await this.passesService.remove(params.id);
+    return Promise.resolve({ message: 'removed' });
   }
 }
