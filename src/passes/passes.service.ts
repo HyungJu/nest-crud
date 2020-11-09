@@ -24,23 +24,23 @@ export class PassesService {
     await this.passRepository.delete(uuid);
   }
 
-  async update(uuid: string, pass: UpdatePassDto): Promise<Pass> {
+  async update(uuid: string, pass: UpdatePassDto): Promise<UpdatePassDto> {
     const passToUpdate = await this.find(uuid);
     passToUpdate.code = pass.code;
     passToUpdate.name = pass.name;
     passToUpdate.type = BarcodeType[pass.type];
 
     const ret = await this.passRepository.update(uuid, passToUpdate);
-    return passToUpdate;
+    return pass;
   }
 
-  async insert(pass: CreatePassDto): Promise<string> {
+  async insert(pass: CreatePassDto): Promise<CreatePassDto> {
     const passCreated = new Pass();
     passCreated.code = pass.code;
     passCreated.name = pass.name;
     passCreated.type = BarcodeType[pass.type];
 
     const ret = await this.passRepository.insert(passCreated);
-    return ret.identifiers[0].id;
+    return pass;
   }
 }

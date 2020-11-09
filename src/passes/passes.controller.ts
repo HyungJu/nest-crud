@@ -27,7 +27,7 @@ export class PassesController {
   }
 
   @Post()
-  async create(@Body() createPassDto: CreatePassDto): Promise<string> {
+  async create(@Body() createPassDto: CreatePassDto): Promise<CreatePassDto> {
     return this.passesService.insert(createPassDto);
   }
 
@@ -35,7 +35,7 @@ export class PassesController {
   async update(
     @Param() params,
     @Body() updatePassDto: UpdatePassDto,
-  ): Promise<Pass> {
+  ): Promise<UpdatePassDto> {
     return this.passesService.update(params.id, updatePassDto);
   }
 
