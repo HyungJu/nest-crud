@@ -1,14 +1,21 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  PrimaryColumn,
+} from 'typeorm';
 
 export enum BarcodeType {
-  A_TYPE = 'A_TYPE',
-  B_TYPE = 'B_TYPE',
+  PKBarcodeFormatQR = 'PKBarcodeFormatQR',
+  PKBarcodeFormatPDF417 = 'PKBarcodeFormatPDF417',
+  PKBarcodeFormatAztec = 'PKBarcodeFormatAztec',
+  PKBarcodeFormatCode128 = 'PKBarcodeFormatCode128',
 }
 
 @Entity()
 export class Pass {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   name: string;
@@ -16,10 +23,23 @@ export class Pass {
   @Column()
   code: number;
 
+  @PrimaryColumn()
+  serial_number: string;
+
+  @PrimaryColumn()
+  authentication_token: string;
+
   @Column({
     type: 'enum',
     enum: BarcodeType,
-    default: BarcodeType.A_TYPE,
+    default: BarcodeType.PKBarcodeFormatCode128,
   })
-  type: BarcodeType;
+  primary_barcode_type: BarcodeType;
+
+  @Column({
+    type: 'enum',
+    enum: BarcodeType,
+    default: BarcodeType.PKBarcodeFormatCode128,
+  })
+  secondary_barcode_type: BarcodeType;
 }
