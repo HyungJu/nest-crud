@@ -3,3 +3,7 @@ export class CreatePassDto {
   code: number;
   type: string;
 }
+
+export class CreatePassResponseDto {
+  id: string;
+}
